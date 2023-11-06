@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+dotenv.config();
 
-const connectionString = 'mongodb://localhost:27017/nht';
+const connectionString = process.env.DB_URL;
 
 mongoose.set('strictQuery', false);
 

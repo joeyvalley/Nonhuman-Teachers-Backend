@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 
 const reportSchema = new mongoose.Schema({
   first: String,
@@ -8,7 +8,16 @@ const reportSchema = new mongoose.Schema({
   category: String,
   subCategory: String,
   details: String,
-  dateCreated: Date
-})
+  dateCreated: {
+    type: Date,
+    default: Date.now
+  },
+  status: {
+    type: String,
+    default: 'pending', // Every new report starts as 'pending'
+    enum: ['pending', 'approved', 'rejected'] // Allowed status values
+  }
+});
 
 export default mongoose.model('Report', reportSchema);
+
