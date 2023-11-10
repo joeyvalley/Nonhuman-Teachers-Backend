@@ -49,10 +49,18 @@ export async function postReport(req, res) {
 }
 
 function sendNotificationEmail() {
+  const today = new Date();
+
+  const day = String(today.getDate()).padStart(2, '0');
+  const month = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+  const year = String(today.getFullYear()).slice(-2); // Get last two digits of year
+
+  const formattedDate = `${month}/${day}/${year}`;
+
   const mailOptions = {
     from: 'nht.backend@gmail.com',
     to: 'info@nonhumanteachers.org',
-    subject: 'New Experience Report Submitted',
+    subject: `Experience Report submitted on ${formattedDate}`,
     html: 'A new report has been submitted. Please <a href="https://nonhumanteachers.org/admin">review it</a>.'
   };
 
