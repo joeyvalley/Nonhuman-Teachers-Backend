@@ -3,7 +3,18 @@ import User from './userModel.js'
 
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken';
+import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
+
+dotenv.config();
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'nht.backend@gmail.com',
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
 export async function getReports(req, res) {
   try {
@@ -30,10 +41,29 @@ export async function postReport(req, res) {
       status: req.body.status
     });
     const savedReport = await newReport.save();
+    sendNotificationEmail();
     res.json(true);
   } catch (err) {
     res.json(false);
   }
+}
+
+function sendNotificationEmail() {
+  const mailOptions = {
+    from: 'nht.backend@gmail.com',
+    to: 'info@nonhumanteachers.org',
+    subject: 'New Experience Report Submitted',
+    html: 'A new report has been submitted. Please <a href="https://nonhumanteachers.org/admin">review it</a>.'
+  };
+
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log('Error sending email: ', error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+
 }
 
 export async function authenticate(req, res) {
